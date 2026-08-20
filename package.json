@@ -1,0 +1,12 @@
+{
+  "name": "postbox-scheduler",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=@postbox/api",
+    "dev:web": "npm run dev --workspace=@postbox/web",
+    "dev:worker": "npm run dev:worker --workspace=@postbox/api",
+    "db:generate": "npm run db:generate --workspace=@postbox/api",
+    "db:migrate": "npm run db:migrate --workspace=@postbox/api"
+  }
+}
