@@ -8,12 +8,3 @@ export interface EmailRow {
   sentAt: string | null;
   status: MessageStatus;
 }
-
-export interface ScheduleCampaignInput {
-  recipients: string[];
-  subject: string;
-  body: string;
-  startAt: string;
-  delaySeconds: number;
-  hourlyLimit: number;
-}
