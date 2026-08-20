@@ -21,4 +21,4 @@ app.use((error: unknown, _req: express.Request, res: express.Response, _next: ex
   const clientError = statusCode === 400 || message.includes("future") || message.includes("Idempotency-Key");
   res.status(statusCode ?? (clientError ? 400 : 500)).json({ message: clientError || statusCode ? message : "Unexpected server error" });
 });
-app.listen(config.port, () => console.log(`API listening on http://localhost:${config.port}`));
+app.listen(config.port, "0.0.0.0", () => console.log(`API listening on 0.0.0.0:${config.port}`));

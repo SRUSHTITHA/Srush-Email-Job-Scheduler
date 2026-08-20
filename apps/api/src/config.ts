@@ -13,7 +13,7 @@ function requiredSecret(name: string, fallback: string) {
 }
 
 export const config = {
-  port: numberSetting("API_PORT", 4000),
+  port: numberSetting("PORT", numberSetting("API_PORT", 4000)),
   webOrigin: process.env.WEB_ORIGIN ?? "http://localhost:5173",
   redisUrl: process.env.REDIS_URL ?? "redis://localhost:6379",
   jwtSecret: requiredSecret("JWT_SECRET", "development-only-secret-change-me"),
