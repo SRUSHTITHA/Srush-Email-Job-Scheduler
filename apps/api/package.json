@@ -9,11 +9,13 @@
     "start": "node dist/server.js",
     "start:worker": "node dist/worker/email-worker.js",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@postbox/shared": "workspace:*",
     "@prisma/client": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "bullmq": "^5.34.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

@@ -19,5 +19,10 @@ dashboardRouter.get("/messages", async (req: AuthenticatedRequest, res) => {
   res.json(messages.map((m) => ({ id: m.id, recipient: m.recipient, subject: m.campaign.subject, scheduledFor: m.scheduledFor, sentAt: m.sentAt, status: m.status })));
 });
 dashboardRouter.post("/campaigns", async (req: AuthenticatedRequest, res, next) => {
-  try { res.status(201).json(await scheduleCampaign(req.userId!, req.body)); } catch (error) { next(error); }
+  try {
+    const idempotencyKey = req.header("Idempotency-Key");
+    if (idempotencyKey && idempotencyKey.length > 128) return res.status(400).json({ message: "Idempotency-Key must be 128 characters or fewer." });
+    const result = await scheduleCampaign(req.userId!, req.body, idempotencyKey);
+    res.status(result.reused ? 200 : 201).json(result);
+  } catch (error) { next(error); }
 });
