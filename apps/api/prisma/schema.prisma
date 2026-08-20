@@ -16,7 +16,8 @@ enum MessageStatus {
 
 model User {
   id        String @id @default(cuid())
-  googleId  String @unique
+  googleId  String? @unique
+  passwordHash String?
   name      String
   email     String @unique
   avatarUrl String?
@@ -28,13 +29,19 @@ model Campaign {
   id           String @id @default(cuid())
   ownerId      String
   owner        User @relation(fields: [ownerId], references: [id])
+  idempotencyKey String?
   subject      String
   body         String
+  attachmentName String?
+  attachmentType String?
+  attachmentData String?
   startAt      DateTime
   delaySeconds Int
   hourlyLimit  Int
   messages     EmailMessage[]
   createdAt    DateTime @default(now())
+
+  @@unique([ownerId, idempotencyKey])
 }
 
 model EmailMessage {
