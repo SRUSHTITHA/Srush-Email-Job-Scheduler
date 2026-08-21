@@ -2,14 +2,14 @@ const API = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 
 export async function api<T>(
   path: string,
-  init: RequestInit = {}
+  init?: RequestInit
 ): Promise<T> {
   const response = await fetch(`${API}${path}`, {
     ...init,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(init.headers ?? {}),
+      ...(init?.headers ?? {}),
     },
   });
 

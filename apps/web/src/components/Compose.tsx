@@ -134,7 +134,30 @@ export function Compose({ onBack, onSaved, email }: Props) {
           </div>
         )}
       </div>
-      <button className="send" onClick={submit} disabled={saving}>{saving ? "Scheduling..." : "Schedule"}</button>
+      <button
+        type="button"
+        onClick={submit}
+        disabled={saving}
+        style={{
+          appearance: "none",
+          border: "1px solid #111",
+          borderRadius: "8px",
+          background: "#111",
+          color: "#fff",
+          padding: "10px 18px",
+          minHeight: "40px",
+          fontSize: "14px",
+          fontWeight: 600,
+          cursor: saving ? "not-allowed" : "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          whiteSpace: "nowrap",
+          opacity: saving ? 0.55 : 1,
+        }}
+      >
+        {saving ? "Scheduling..." : "Schedule"}
+      </button>
     </header>
     
     <section className="form">
