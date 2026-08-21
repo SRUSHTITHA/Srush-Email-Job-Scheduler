@@ -1,4 +1,5 @@
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:4000";
+const API =
+  import.meta.env.VITE_API_URL ?? "http://localhost:4000";
 
 export async function api<T>(
   path: string,
@@ -6,6 +7,7 @@ export async function api<T>(
 ): Promise<T> {
   const response = await fetch(`${API}${path}`, {
     ...init,
+    cache: "no-store",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
@@ -15,7 +17,10 @@ export async function api<T>(
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    throw new Error(body.message ?? "Request failed");
+
+    throw new Error(
+      body.message ?? "Request failed"
+    );
   }
 
   return response.status === 204
