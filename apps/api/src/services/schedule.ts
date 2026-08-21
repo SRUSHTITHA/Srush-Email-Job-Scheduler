@@ -40,6 +40,20 @@ export async function scheduleCampaign(ownerId: string, raw: unknown, idempotenc
     const existing = await db.campaign.findUniqueOrThrow({ where: { ownerId_idempotencyKey: { ownerId, idempotencyKey: normalizedIdempotencyKey } }, select: { id: true, messages: { select: { id: true } } } });
     return { id: existing.id, recipientCount: existing.messages.length, reused: true };
   }
-  await Promise.all(campaign.messages.map((message) => queueMessage(message.id, message.scheduledFor)));
-  return { id: campaign.id, recipientCount: campaign.messages.length };
+
+void Promise.all(
+  campaign.messages.map((message) =>
+    queueMessage(message.id, message.scheduledFor)
+  )
+).catch((error) => {
+  console.error(
+    `[queue] failed to enqueue campaign ${campaign.id}`,
+    error
+  );
+});
+
+return {
+  id: campaign.id,
+  recipientCount: campaign.messages.length
+};
 }
