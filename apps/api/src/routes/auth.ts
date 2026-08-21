@@ -15,7 +15,7 @@ const failureWindowMs = 15 * 60 * 1000;
 
 function setSession(res: Response, userId: string) {
   const token = jwt.sign({ userId }, config.jwtSecret, { expiresIn: "7d" });
-  res.cookie("postbox_session", token, { httpOnly: true, sameSite: "lax", secure: config.webOrigin.startsWith("https://"), maxAge: 604800000 });
+  res.cookie("postbox_session", token, { httpOnly: true, sameSite: config.webOrigin.startsWith("https://") ? "none" : "lax", secure: config.webOrigin.startsWith("https://"), maxAge: 604800000 });
 }
 
 authRouter.post("/register", async (req, res, next) => {
