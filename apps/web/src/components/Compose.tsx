@@ -62,18 +62,22 @@ export function Compose({ onBack, onSaved, email }: Props) {
     try { 
       setSaving(true); 
       setError(""); 
-      await api("/api/campaigns", { 
-        method: "POST", 
-        headers: { "Idempotency-Key": idempotencyKey },
-        body: JSON.stringify({ 
-          recipients, 
-          subject, 
-          body, 
-          attachment,
-          delaySeconds, 
-          hourlyLimit, 
-          startAt: new Date(startAt).toISOString() 
-        }) 
+      const campaignPayload = {
+        recipients,
+        subject: subject.trim(),
+        body: body.trim(),
+        attachment,
+        delaySeconds: Number(delaySeconds),
+        hourlyLimit: Number(hourlyLimit),
+        startAt: new Date(startAt).toISOString(),
+      };
+
+      await api("/api/campaigns", {
+        method: "POST",
+        headers: {
+          "Idempotency-Key": idempotencyKey,
+        },
+        body: JSON.stringify(campaignPayload),
       }); 
       onSaved(); 
     } catch (e) { 
