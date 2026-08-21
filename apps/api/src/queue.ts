@@ -8,18 +8,21 @@ export const redis = new IORedis(config.redisUrl, {
   enableReadyCheck: true,
 });
 
-export const emailQueue = new Queue<{ messageId: string; reservedAt?: number }>(
-  "outbound-email",
-  {
-    connection: redis,
-  }
-);
+export const emailQueue = new Queue<{
+  messageId: string;
+  reservedAt?: number;
+}>("outbound-email", {
+  connection: redis,
+});
 
 export async function queueMessage(
   messageId: string,
   scheduledFor: Date
 ) {
-  const delay = Math.max(0, scheduledFor.getTime() - Date.now());
+  const delay = Math.max(
+    0,
+    scheduledFor.getTime() - Date.now()
+  );
 
   await emailQueue.add(
     "send-email",
