@@ -19,26 +19,36 @@ workerRedis.on("ready", () => {
   console.log("[worker redis] ready");
 });
 
-const senders = await Promise.all(
-  Array.from(
-    { length: config.etherealSenderCount },
-    async () => {
-      const account = await nodemailer.createTestAccount();
+if (!config.etherealUser || !config.etherealPass) {
+  throw new Error(
+    "ETHEREAL_USER and ETHEREAL_PASS must be configured"
+  );
+}
 
-      return {
-        account,
-        transport: nodemailer.createTransport({
-          host: account.smtp.host,
-          port: account.smtp.port,
-          secure: account.smtp.secure,
-          auth: {
-            user: account.user,
-            pass: account.pass,
-          },
-        }),
-      };
-    }
-  )
+const senders = Array.from(
+  { length: config.etherealSenderCount },
+  (_, index) => {
+    const transport = nodemailer.createTransport({
+      host: config.etherealHost,
+      port: config.etherealPort,
+      secure: config.etherealPort === 465,
+      auth: {
+        user: config.etherealUser,
+        pass: config.etherealPass,
+      },
+      connectionTimeout: 30_000,
+      greetingTimeout: 30_000,
+      socketTimeout: 60_000,
+    });
+
+    return {
+      account: {
+        user: config.etherealUser,
+      },
+      transport,
+      index,
+    };
+  }
 );
 
 const worker = new Worker<{
